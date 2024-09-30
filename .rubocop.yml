@@ -1,0 +1,34 @@
+require:
+  - rubocop-capybara
+  - rubocop-packaging
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: disable
+  TargetRubyVersion: 3.3.0
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  Exclude:
+    - bin/*
+    - tmp/**/*
+    - vendor/**/*
+    - temp_app/**/*
+    - lib/report_portal/http_client.rb
+    - lib/report_portal/settings.rb
+    - lib/reportportal.rb
+
+Layout/LineLength:
+  Max: 200
+
+Metrics/AbcSize:
+  Exclude:
+    - lib/report_portal/logging/**
+
+Metrics/BlockLength:
+    Exclude:
+      - lib/report_portal/logging/**
+
+Metrics/MethodLength:
+    Exclude:
+        - lib/report_portal/logging/**
