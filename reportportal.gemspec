@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email                  = 'yan_ramanovich@epam.com'
   s.homepage               = 'https://github.com/rko619619/agent-cucumber-ruby'
   s.files                  = ['README.md', 'LICENSE'] + Dir['lib/**/*']
-  s.required_ruby_version  = '>= 3.3.0'
+  s.required_ruby_version  = '>= 3.2.0'
   s.license                = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 3.2.8'
