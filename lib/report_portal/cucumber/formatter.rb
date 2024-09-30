@@ -17,6 +17,7 @@ module ReportPortal
 
       def initialize(config)
         @logger = ReportPortal::CustomLogger.new
+        puts 'Test'
         @formatter_service = formatter_class.new(config)
       end
 
