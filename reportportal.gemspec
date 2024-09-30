@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
 
   s.metadata = {
     'bug_tracker_uri' => 'https://github.com/rko619619/agent-ruby/issues',
-    'changelog_uri' => 'https://github.com/cucumber/cucumber-ruby/blob/main/CHANGELOG.md'
   }
 
   s.add_dependency 'builder', '~> 3.2'
