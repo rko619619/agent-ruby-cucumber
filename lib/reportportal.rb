@@ -60,23 +60,19 @@ module ReportPortal
 
     def start_step(step_node:)
       item = step_node.content
-      unless item.respond_to?(:start_time) && item.respond_to?(:name) && item.respond_to?(:type)
-        raise "Invalid object in step_node.content. Expected attributes: start_time, name, type. Received: #{step_node.inspect}"
-      end
 
       path = 'item'
       if step_node.parent && !step_node.parent.is_root?
         parent_item = step_node.parent.content
-        raise "Invalid parent object in step_node.parent.content. Expected attribute: id. Received: #{parent_item.inspect}" unless parent_item.respond_to?(:id)
 
         path += "/#{parent_item.id}"
       end
 
       data = {
         start_time: item.start_time,
-        name: item.name[0, 255], # Limit name length to 255 characters
-        type: item.type.to_s, # Convert type to string
-        launch_id: @launch_id, # ID of the current launch
+        name: item.name[0, 255],
+        type: item.type.to_s,
+        launch_id: @launch_id,
         description: item.description
       }
 
@@ -84,21 +80,17 @@ module ReportPortal
 
       response = send_request(:post, path, json: data)
 
-      raise "Error in ReportPortal response: ID not found. Response: #{response.inspect}" unless response['id']
-
       item.id = response['id']
       item.start_time = item.start_time
     end
 
     def step_finished(step_node:)
       item = step_node.content
-      raise "Error: content of the node does not contain an object with id. Received: #{item.inspect}" unless item.respond_to?(:id) && !item.id.nil?
-
       return if item.closed
 
       data = {
         end_time: now,
-        status: item.status # Assuming `item.status` holds the step's status
+        status: item.status
       }
 
       send_request(:put, "item/#{item.id}", json: data)
@@ -117,9 +109,9 @@ module ReportPortal
 
       data = {
         start_time: @current_test_case.start_time,
-        name: @current_test_case.name[0, 255], # Ограничиваем длину имени до 255 символов
-        type: @current_test_case.type.to_s, # Преобразуем тип в строку
-        launch_id: @launch_id, # ID текущего запуска
+        name: @current_test_case.name[0, 255],
+        type: @current_test_case.type.to_s,
+        launch_id: @launch_id,
         description: @current_test_case.description
       }
 
@@ -153,9 +145,9 @@ module ReportPortal
 
       data = {
         start_time: item.start_time,
-        name: item.name[0, 255], # Ограничиваем длину имени до 255 символов
-        type: item.type.to_s, # Преобразуем тип в строку
-        launch_id: @launch_id, # ID текущего запуска
+        name: item.name[0, 255],
+        type: item.type.to_s,
+        launch_id: @launch_id,
         description: item.description
       }
 
@@ -170,14 +162,13 @@ module ReportPortal
       data = { end_time: end_time || now }
       data[:status] = 'passed'
 
-      # Отправляем запрос для завершения айтема
       send_request(:put, "item/#{item_node.content.id}", json: data)
 
       item_node.content.closed = true
     end
 
     def send_log(status, message, time = now)
-      return if @current_test_case.nil? || @current_test_case.closed # it can be nil if scenario outline in expand mode is executed
+      return if @current_test_case.nil? || @current_test_case.closed
 
       data = { item_id: @current_test_case.id, time:, level: status_to_level(status), message: message.to_s }
       send_request(:post, 'log', json: data)
