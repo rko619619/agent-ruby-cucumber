@@ -1,0 +1,7 @@
+pre-push:
+  parallel: true
+  commands:
+    audit:
+      run: bundle exec bundle-audit check --update
+    rubocop:
+      run: bundle exec rubocop --force-exclusion {all_files}
